@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets._Project.Food
 {
-    public class FoodInstance : MonoBehaviour
+    public class Food : MonoBehaviour
     {
         public event Action OnEaten;
 
