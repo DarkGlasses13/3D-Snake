@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Assets._Project.Food
+namespace Assets._Project
 {
-    public class FoodInstance : MonoBehaviour
+    public class Food : MonoBehaviour
     {
         public event Action OnEaten;
 

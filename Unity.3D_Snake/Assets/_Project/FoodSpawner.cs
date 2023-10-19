@@ -6,11 +6,11 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Random = UnityEngine.Random;
 
-namespace Assets._Project.Food.Spawn
+namespace Assets._Project
 {
     public class FoodSpawner : IDisposable
     {
-        private readonly MonoPool<FoodInstance> _pool;
+        private readonly MonoPool<Food> _pool;
         private readonly Terrain _terrain;
         private readonly GameConfigLoader _configLoader;
         private GameConfig _config;
@@ -40,12 +40,12 @@ namespace Assets._Project.Food.Spawn
             if (_terrain)
             {
                 Vector2 randomPointInsideTerrainCircle = Random.insideUnitCircle * _spawnRadius;
-                Vector3 randomPosition = new Vector3 
+                Vector3 randomPosition = new Vector3
                 (
                     randomPointInsideTerrainCircle.x,
                     _terrain.terrainData.bounds.center.y,
                     randomPointInsideTerrainCircle.y
-                ) 
+                )
                 + _terrain.GetPosition() + _terrain.terrainData.bounds.center;
 
                 randomPosition.y = _terrain.SampleHeight(randomPosition);
@@ -53,19 +53,19 @@ namespace Assets._Project.Food.Spawn
             }
         }
 
-        private FoodInstance Spawn(Vector3 position, Quaternion rotation)
+        private Food Spawn(Vector3 position, Quaternion rotation)
         {
-            FoodInstance instance = _pool.Get();
+            Food instance = _pool.Get();
             position.y += instance.MeshFilter.mesh.bounds.size.y / 2;
             instance.transform.SetPositionAndRotation(position, rotation);
             return instance;
         }
 
-        protected FoodInstance CreateFromPrefab()
+        protected Food CreateFromPrefab()
         {
             AsyncOperationHandle<GameObject> instantiate = Addressables.InstantiateAsync("Food");
             instantiate.WaitForCompletion();
-            FoodInstance instance = instantiate.Result.AddComponent<FoodInstance>();
+            Food instance = instantiate.Result.AddComponent<Food>();
             instance.OnEaten += OnEaten;
             return instance;
         }
@@ -74,7 +74,7 @@ namespace Assets._Project.Food.Spawn
 
         public void Dispose()
         {
-            foreach (FoodInstance instance in _pool.All)
+            foreach (Food instance in _pool.All)
             {
                 instance.OnEaten -= OnEaten;
             }
