@@ -1,8 +1,7 @@
-﻿using Assets._Project.Food.Spawn;
-using System;
+﻿using System;
 using Zenject;
 
-namespace Assets._Project.Core
+namespace Assets._Project
 {
     public class GameRunner : IInitializable, IDisposable
     {

@@ -1,8 +1,7 @@
-﻿using Assets._Project.Food.Spawn;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
 
-namespace Assets._Project.Core
+namespace Assets._Project
 {
     [CreateAssetMenu(fileName = "Game Installer", menuName = "Installers/Game Installer")]
     public class GameInstaller : ScriptableObjectInstaller<GameInstaller>
