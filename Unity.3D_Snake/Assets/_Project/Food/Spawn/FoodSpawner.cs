@@ -10,7 +10,7 @@ namespace Assets._Project.Food.Spawn
 {
     public class FoodSpawner : IDisposable
     {
-        private readonly MonoPool<Food> _pool;
+        private readonly MonoPool<FoodInstance> _pool;
         private readonly Terrain _terrain;
         private readonly GameConfigLoader _configLoader;
         private GameConfig _config;
@@ -53,19 +53,19 @@ namespace Assets._Project.Food.Spawn
             }
         }
 
-        private Food Spawn(Vector3 position, Quaternion rotation)
+        private FoodInstance Spawn(Vector3 position, Quaternion rotation)
         {
-            Food instance = _pool.Get();
+            FoodInstance instance = _pool.Get();
             position.y += instance.MeshFilter.mesh.bounds.size.y / 2;
             instance.transform.SetPositionAndRotation(position, rotation);
             return instance;
         }
 
-        protected Food CreateFromPrefab()
+        protected FoodInstance CreateFromPrefab()
         {
             AsyncOperationHandle<GameObject> instantiate = Addressables.InstantiateAsync("Food");
             instantiate.WaitForCompletion();
-            Food instance = instantiate.Result.AddComponent<Food>();
+            FoodInstance instance = instantiate.Result.AddComponent<FoodInstance>();
             instance.OnEaten += OnEaten;
             return instance;
         }
@@ -74,7 +74,7 @@ namespace Assets._Project.Food.Spawn
 
         public void Dispose()
         {
-            foreach (Food instance in _pool.All)
+            foreach (FoodInstance instance in _pool.All)
             {
                 instance.OnEaten -= OnEaten;
             }
