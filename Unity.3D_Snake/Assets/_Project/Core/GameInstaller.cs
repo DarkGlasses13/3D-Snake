@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets._Project.Food.Spawn;
+using UnityEngine;
 using Zenject;
 
 namespace Assets._Project.Core
@@ -8,7 +9,42 @@ namespace Assets._Project.Core
     {
         public override void InstallBindings()
         {
+            BindRunner();
+            BindConfig();
+            BindTerrain();
+            BindFoodSpawner();
+        }
 
+        private void BindFoodSpawner()
+        {
+            Container
+                .BindInterfacesAndSelfTo<FoodSpawner>()
+                .FromNew()
+                .AsSingle();
+        }
+
+        private void BindTerrain()
+        {
+            Container
+                .Bind<Terrain>()
+                .FromComponentInHierarchy()
+                .AsSingle();
+        }
+
+        private void BindConfig()
+        {
+            Container
+                .Bind<GameConfigLoader>()
+                .FromNew()
+                .AsSingle();
+        }
+
+        private void BindRunner()
+        {
+            Container
+                .BindInterfacesTo<GameRunner>()
+                .AsSingle()
+                .NonLazy();
         }
     }
 }
