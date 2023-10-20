@@ -3,21 +3,13 @@ using UnityEngine;
 
 namespace Assets._Project
 {
-    public class Food : MonoBehaviour
+    public class Food : MonoBehaviour, IHaveMesh
     {
         public event Action OnEaten;
 
-        private MeshFilter _meshFilter;
+        private readonly MeshFilterGetter _meshFilterGetter = new();
 
-        public MeshFilter MeshFilter => _meshFilter;
-
-        private void Awake()
-        {
-            if (TryGetComponent(out _meshFilter) == false)
-            {
-                _meshFilter = GetComponentInChildren<MeshFilter>();
-            }
-        }
+        public MeshFilter MeshFilter => _meshFilterGetter.Get(this);
 
         public void Eat()
         {

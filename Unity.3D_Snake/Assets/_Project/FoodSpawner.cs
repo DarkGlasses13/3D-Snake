@@ -10,21 +10,25 @@ namespace Assets._Project
 {
     public class FoodSpawner : IDisposable
     {
-        private readonly MonoPool<Food> _pool;
+        private readonly FoodFactory _factory;
         private readonly Terrain _terrain;
         private readonly GameConfigLoader _configLoader;
+        private GameObject _prefab;
         private GameConfig _config;
+        private readonly MonoPool<Food> _pool;
         private float _spawnRadius;
 
-        public FoodSpawner(Terrain terrain, GameConfigLoader configLoader)
+        public FoodSpawner(FoodFactory factory, Terrain terrain, GameConfigLoader configLoader)
         {
-            _pool = new(CreateFromPrefab);
+            _factory = factory;
             _terrain = terrain;
             _configLoader = configLoader;
+            _pool = new(CreateFromPrefab);
         }
 
         public async Task SpawnInitialAsync()
         {
+            _prefab = await Addressables.InstantiateAsync("Food").Task;
             _config = _configLoader.Load();
             _spawnRadius = _terrain.terrainData.bounds.size.x / 2;
 
@@ -63,9 +67,7 @@ namespace Assets._Project
 
         protected Food CreateFromPrefab()
         {
-            AsyncOperationHandle<GameObject> instantiate = Addressables.InstantiateAsync("Food");
-            instantiate.WaitForCompletion();
-            Food instance = instantiate.Result.AddComponent<Food>();
+            Food instance = _factory.Create(_prefab);
             instance.OnEaten += OnEaten;
             return instance;
         }

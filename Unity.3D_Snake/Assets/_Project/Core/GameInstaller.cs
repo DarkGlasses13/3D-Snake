@@ -11,6 +11,7 @@ namespace Assets._Project
             BindRunner();
             BindConfig();
             BindTerrain();
+            BindFoodFactory();
             BindFoodSpawner();
         }
 
@@ -18,6 +19,14 @@ namespace Assets._Project
         {
             Container
                 .BindInterfacesAndSelfTo<FoodSpawner>()
+                .FromNew()
+                .AsSingle();
+        }
+
+        private void BindFoodFactory()
+        {
+            Container
+                .Bind<FoodFactory>()
                 .FromNew()
                 .AsSingle();
         }
